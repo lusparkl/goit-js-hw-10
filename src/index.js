@@ -14,6 +14,8 @@ const refs = {
 }
 
 
+
+refs.select.style.display = 'none';
 refs.loader.classList.remove('visually-hidden')
 fetchBreeds()
     .then(resp => {
@@ -21,16 +23,17 @@ fetchBreeds()
             return `<option value="${el.id}">${el.name}</option>`
         }).join('');
         refs.select.insertAdjacentHTML('beforeend', markup);
-        new SlimSelect({
-            select: refs.select
-        })
     })
     .catch(() => Notiflix.Notify.failure('Oops error'))
-    .finally(() => refs.loader.classList.add('visually-hidden'));
+    .finally(() => {
+        refs.loader.classList.add('visually-hidden');
+        refs.select.style.display = 'inline';
+    });
 
 refs.select.addEventListener('change', onSelect);
 
 function onSelect(evt) {
+    refs.select.style.display = 'none';
     refs.wrapp.innerHTML = '';
     refs.loader.classList.remove('visually-hidden')
     fetchCatByBreed(evt.currentTarget.value)
@@ -45,5 +48,8 @@ function onSelect(evt) {
             </div>`
         })
         .catch(() => Notiflix.Notify.failure('Oops error'))
-        .finally(() => refs.loader.classList.add('visually-hidden'));
+        .finally(() => {
+            refs.loader.classList.add('visually-hidden');
+            refs.select.style.display = 'inline';
+        });
 }
